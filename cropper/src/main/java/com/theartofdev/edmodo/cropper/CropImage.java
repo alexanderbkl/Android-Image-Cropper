@@ -339,14 +339,19 @@ public final class CropImage {
    * @param context used to access Android APIs, like content resolve, it is your
    *     activity/fragment/widget.
    */
-  public static Uri getCaptureImageOutputUri(@NonNull Context context) {
-    Uri outputFileUri = null;
-    File getImage = context.getExternalCacheDir();
-    if (getImage != null) {
-      outputFileUri = Uri.fromFile(new File(getImage.getPath(), "pickImageResult.jpeg"));
-    }
-    return outputFileUri;
-  }
+public static Uri getCaptureImageOutputUri(@nonnull Context context) {
+Uri outputFileUri = null;
+File getImage = context.getExternalCacheDir();
+if (getImage != null) {
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+outputFileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider",
+new File(getImage.getPath(), "pickImageResult.jpeg"));
+} else {
+outputFileUri = Uri.fromFile(new File(getImage.getPath(), "pickImageResult.jpeg"));
+}
+}
+return outputFileUri;
+}
 
   /**
    * Get the URI of the selected image from {@link #getPickImageChooserIntent(Context)}.<br>
